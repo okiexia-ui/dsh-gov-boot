@@ -1,8 +1,14 @@
 # dsh-gov-boot
 
+[![CI](https://github.com/okiexia-ui/dsh-gov-boot/actions/workflows/ci.yml/badge.svg)](https://github.com/okiexia-ui/dsh-gov-boot/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![DeepSeek Harness plugin](https://img.shields.io/badge/DeepSeek%20Harness-plugin-c8161d.svg)](#安装)
+
+中文 | [English](README.en.md)
+
 给 DeepSeek Harness 的**政务风开机动画**：宣纸底朱红大字的长城片头 → 科技蓝统一身份认证（账号 / 扫码 / CA 证书三种登录方式）→ 选择要进入的工作台，再淡入 DSH。设置里可以切换档位和配色。
 
-**下载安装包**：[dsh-gov-boot-0.4.0.tgz](https://github.com/okiexia-ui/dsh-gov-boot/raw/main/dist/dsh-gov-boot-0.4.0.tgz)（点了直接下载，装法见下面「安装」）
+**下载**：到 [Releases](https://github.com/okiexia-ui/dsh-gov-boot/releases/latest) 下载最新的 `.tgz`，或者直接点 [dsh-gov-boot-0.4.0.tgz](https://github.com/okiexia-ui/dsh-gov-boot/raw/main/dist/dsh-gov-boot-0.4.0.tgz)。装法见下面「安装」
 
 ![开机片头](preview/stills/splash.jpg)
 
@@ -115,6 +121,8 @@ link:/你的/源码/目录/dsh-gov-boot
 lib/index.js     宿主半边：webserver/index-inject 注入首帧 CSS/脚本 + 版本
 lib/client.js    客户端半边：shadow DOM、片头时间线、认证页、选择工作台、设置行、跳过与淡出
 preview/         独立预览页（加载真实 client.js）与截图
+test/            宿主约定测试 + 无头浏览器端到端测试
+scripts/         截图生成脚本
 cordis.patch.yml 把宿主半边挂进 profile 的 bundle patch
 ```
 
@@ -123,6 +131,30 @@ cordis.patch.yml 把宿主半边挂进 profile 的 bundle patch
 - 画面里没有国徽、党徽、国旗等受法律保护的标志；印章是装饰性的方形朱文印，不仿公章样式
 - 认证页上的「核验」是启动画面的一部分，并不做真正的身份验证；页面上的温馨提示也写明了这一点
 - 字体使用系统自带的 Songti SC / PingFang SC / Kaiti SC（Windows 上回退到宋体 / 微软雅黑 / 楷体），不内嵌字体文件
+
+## 路线图
+
+- [ ] 认证页和选择页推迟到片头播放中再构建，首帧挂载开销降约三分之二
+- [ ] 城市窗户、二维码合并成单个 `<path>`，遮罩 DOM 节点从约 1100 个降到约 400 个
+- [ ] 「自动」档：装完或升级后第一次播完整版，之后只播片头
+- [ ] 在设置里自定义标题、印章文字和四个工作台
+- [ ] 英文界面
+- [ ] 发布到 npm，进入 DSH 插件市场
+
+想认领哪一条，开个 issue 说一声就行。
+
+## 参与贡献
+
+欢迎 issue 和 PR。开发环境、测试命令和约定见 [CONTRIBUTING.md](CONTRIBUTING.md)，简单说：
+
+```bash
+npm install && npx playwright install chromium
+npm test            # 语法 + 约定检查
+npm run test:e2e    # 无头浏览器跑完整流程
+npm run shots       # 重新生成截图
+```
+
+参与即表示同意遵守 [行为准则](CODE_OF_CONDUCT.md)；安全问题请按 [SECURITY.md](SECURITY.md) 私下报告。
 
 ## 许可与致谢
 

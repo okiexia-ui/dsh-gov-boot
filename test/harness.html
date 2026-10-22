@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>dsh-gov-boot · test harness</title>
+<script src="../node_modules/react/umd/react.development.js"></script>
+<script src="../node_modules/react-dom/umd/react-dom.development.js"></script>
+<script>
+  // ?card=1      a DSH-style boot card with a spinner is on the page (the app is still booting)
+  // ?platform=x  html[data-platform], as the desktop shell sets it
+  var params = new URLSearchParams(location.search)
+  if (params.get('platform')) document.documentElement.setAttribute('data-platform', params.get('platform'))
+  window.__ModuleLoader__ = {
+    load: function (record) {
+      var t0 = performance.now()
+      window.__mod = record.factory(function (name) {
+        if (name === 'react') return window.React
+        throw new Error('unexpected require ' + name)
+      })
+      window.__factoryMs = performance.now() - t0
+    },
+  }
+</script>
+</head>
+<body>
+<input id="app" autofocus>
+<script>
+  if (params.get('card')) {
+    var card = document.createElement('div')
+    card.setAttribute('data-dsh-boot', '')
+    card.innerHTML = '<i data-dsh-boot-spinner></i>'
+    document.body.appendChild(card)
+  }
+  window.__leak = []
+  document.getElementById('app').addEventListener('keydown', function (event) { window.__leak.push(event.key) })
+  window.__entered = []
+  document.addEventListener('dsh-gov-boot:enter', function (event) { window.__entered.push(event.detail) })
+</script>
+<script src="../lib/client.js"></script>
+</body>
+</html>

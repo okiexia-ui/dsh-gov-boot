@@ -15,10 +15,20 @@
     "preview",
     "cordis.patch.yml",
     "README.md",
+    "README.en.md",
     "CHANGELOG.md",
     "LICENSE"
   ],
+  "author": "okiexia-ui (https://github.com/okiexia-ui)",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/okiexia-ui/dsh-gov-boot.git"
+  },
+  "homepage": "https://github.com/okiexia-ui/dsh-gov-boot#readme",
+  "bugs": {
+    "url": "https://github.com/okiexia-ui/dsh-gov-boot/issues"
+  },
   "engines": {
     "node": ">=20"
   },
@@ -33,6 +43,14 @@
     "登录动画",
     "政务"
   ],
+  "scripts": {
+    "check": "node --check lib/client.js && node --check lib/index.js",
+    "test": "npm run check && node --test test/host.test.mjs",
+    "test:e2e": "node --test --test-concurrency=1 test/e2e.test.cjs",
+    "test:all": "npm test && npm run test:e2e",
+    "shots": "node scripts/shots.mjs",
+    "prepack": "npm run check"
+  },
   "peerDependencies": {
     "react": "^18.2.0"
   },
@@ -40,6 +58,11 @@
     "react": {
       "optional": true
     }
+  },
+  "devDependencies": {
+    "playwright": "1.56.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "dsh": {
     "engines": {

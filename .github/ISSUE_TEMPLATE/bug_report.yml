@@ -1,0 +1,42 @@
+name: 问题反馈 / Bug report
+description: 片头不显示、卡住、错位、按键异常……
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: 谢谢反馈！先试一下「设置 → 通用 → 政务开机动画 → 预览」能不能复现，能复现的话截图最有用。
+  - type: textarea
+    id: what
+    attributes:
+      label: 发生了什么
+      description: 看到了什么、期望看到什么。截图或录屏直接拖进来。
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      placeholder: |
+        1. 档位选「完整」，配色「中国红」
+        2. ⌘Q 退出后重新打开 DSH
+        3. ……
+  - type: input
+    id: version
+    attributes:
+      label: 插件版本
+      placeholder: 0.4.0（控制台执行 window.__dshGovVersion 可以看到）
+    validations:
+      required: true
+  - type: input
+    id: dsh
+    attributes:
+      label: DSH 版本与平台
+      placeholder: DSH 0.2.1 桌面端 / macOS 15，或 Web 端 / Chrome 130
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: 控制台报错（可选）
+      description: 开发者工具 Console 里带 dsh-gov-boot 的行
+      render: text

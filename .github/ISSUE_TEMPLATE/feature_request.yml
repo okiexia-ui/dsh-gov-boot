@@ -1,0 +1,23 @@
+name: 功能建议 / Feature request
+description: 想加的画面、档位、配色、设置项……
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: 想要什么
+      description: 最好附参考图或参考网站。
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: 为什么需要
+      description: 在什么场景下用得上？
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: 确认
+      options:
+        - label: 不涉及国徽、党徽、国旗或任何真实机构的名称与标志
+          required: true
