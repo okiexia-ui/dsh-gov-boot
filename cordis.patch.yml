@@ -1,0 +1,8 @@
+# Bundle patch for dsh-gov-boot.
+#
+# The row mounts the host half; the package's `dsh.client` block gets the
+# browser half served and loaded. Both blocks are required for a package to be
+# installable as a profile layer.
+- insert:
+    - id: boot-gov
+      name: dsh-gov-boot

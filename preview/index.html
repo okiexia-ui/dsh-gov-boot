@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>dsh-gov-boot · 预览</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;overflow:hidden}
+  .bar{
+    position:fixed;left:16px;bottom:14px;z-index:2147483000;display:flex;gap:6px;flex-wrap:wrap;
+    font:12px/1 "PingFang SC","Noto Sans SC","Helvetica Neue",sans-serif;
+  }
+  .bar button{
+    padding:7px 12px;border:1px solid rgba(176,138,74,.7);border-radius:2px;cursor:pointer;
+    background:rgba(30,20,10,.72);color:#e9d6a8;letter-spacing:.12em;font:inherit;
+  }
+  .bar button:hover{background:rgba(120,20,22,.75)}
+  .bar button.on{background:#b3121a;color:#fff6e4}
+  .bar i{width:1px;background:rgba(233,214,168,.3)}
+</style>
+</head>
+<body>
+<div class="bar" id="bar">
+  <button data-act="replay">重播</button><i></i>
+  <button data-mode="full">完整</button><button data-mode="splash">仅片头</button><i></i>
+  <button data-theme="blue">科技蓝</button><button data-theme="red">中国红</button><button data-theme="night">深夜蓝</button>
+</div>
+<script>
+  // Query parameters:
+  //   ?seek=NNNN   fast-forward a virtual clock to NNNN ms and pin CSS animations
+  //                to their end state, so screenshots are deterministic
+  //   ?mode=full|splash   ?theme=blue|red|night   ?tab=account|qr|ca
+  // Without ?seek the page plays in real time with a small toolbar.
+  var params = new URLSearchParams(location.search)
+  var seek = Number(params.get('seek') || 0)
+
+  try {
+    localStorage.removeItem('dsh-gov-boot:mode')
+    if (params.get('mode')) localStorage.setItem('dsh-gov-boot:mode', params.get('mode'))
+    if (params.get('theme')) localStorage.setItem('dsh-gov-boot:theme', params.get('theme'))
+  } catch (error) {}
+
+  if (seek > 0) {
+    document.getElementById('bar').remove()
+    var vnow = 0
+    var seq = 0
+    var queue = []
+    window.setTimeout = function (fn, ms) {
+      var id = ++seq
+      queue.push({ t: vnow + Math.max(0, Number(ms) || 0), id: id, fn: fn })
+      return id
+    }
+    window.clearTimeout = function (id) {
+      queue = queue.filter(function (item) { return item.id !== id })
+    }
+    window.__advance = function (limit) {
+      for (;;) {
+        queue.sort(function (a, b) { return a.t - b.t || a.id - b.id })
+        var next = queue[0]
+        if (!next || next.t > limit) break
+        queue.shift()
+        vnow = next.t
+        try { next.fn() } catch (error) { console.error(error) }
+      }
+    }
+  }
+
+  // Stand in for DSH's client module loader so the real lib/client.js can be
+  // previewed as-is. The factory mounts the splash at evaluation time.
+  window.__ModuleLoader__ = {
+    load: function (record) {
+      try {
+        var mod = record.factory(function () { return {} })
+        window.__govBootPreview = mod
+        if (seek > 0) {
+          window.__advance(seek)
+          var tab = params.get('tab')
+          var shadow = document.querySelector('.dsh-gov-boot-host').shadowRoot
+          if (tab) shadow.querySelector('[data-tab="' + tab + '"]').click()
+          freeze(shadow)
+        }
+      } catch (error) {
+        console.error('[dsh-gov-boot] preview failed', error)
+      }
+    },
+  }
+
+  function freeze(shadow) {
+    var style = document.createElement('style')
+    style.textContent =
+      '*{animation-duration:.001s!important;animation-delay:0s!important;transition-duration:.001s!important;transition-delay:0s!important}' +
+      '.ch-card.on.ticking .ch-bar{animation-duration:3s!important;animation-delay:-1.2s!important;animation-play-state:paused!important}'
+    shadow.appendChild(style)
+  }
+
+  var stored = {}
+  try {
+    stored.mode = localStorage.getItem('dsh-gov-boot:mode') || 'full'
+    stored.theme = localStorage.getItem('dsh-gov-boot:theme') || 'blue'
+  } catch (error) {}
+  Array.prototype.forEach.call(document.querySelectorAll('.bar button'), function (button) {
+    if (button.dataset.mode === stored.mode || button.dataset.theme === stored.theme) button.classList.add('on')
+    button.addEventListener('click', function (event) {
+      event.stopPropagation()
+      var next = new URLSearchParams()
+      next.set('mode', button.dataset.mode || stored.mode)
+      next.set('theme', button.dataset.theme || stored.theme)
+      location.search = next.toString()
+    })
+  })
+</script>
+<script src="../lib/client.js"></script>
+</body>
+</html>
