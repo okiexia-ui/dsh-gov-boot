@@ -48,8 +48,8 @@ scripts/shots.mjs   重新生成 preview/stills/ 的截图
 
 1. 同时改 `package.json` 的 `version`、`lib/index.js` 的 `VERSION`、片头左下角的 `V0.x`（`lib/client.js`），在 `CHANGELOG.md` 顶部加一节 `## x.y.z`
 2. `npm run test:all`
-3. 提交后打标签并推送：`git tag vx.y.z && git push origin main --tags`
-4. GitHub Actions 会自动打包、建 Release 并挂上 `.tgz`；仓库里配置了 `NPM_TOKEN` secret 的话还会发布到 npm
+3. 推到 `main` 后，在 GitHub 上 **Releases → Draft a new release**，Tag 填 `vx.y.z`（选 Create new tag），说明可以直接贴 CHANGELOG 那一节，点 **Publish release**
+4. GitHub Actions 会自动跑测试、打包并把 `.tgz` 挂到这个 Release 上；仓库里配置了 `NPM_TOKEN` secret 的话还会发布到 npm
 
 ## 行为准则
 

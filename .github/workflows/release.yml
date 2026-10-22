@@ -1,10 +1,11 @@
-# Push a tag like v0.4.1 and this builds the tarball, attaches it to a GitHub
-# Release, and — if the repository has an NPM_TOKEN secret — publishes to npm.
+# Publish a release on GitHub (Releases → Draft a new release → tag vX.Y.Z →
+# Publish) and this builds the tarball and attaches it to that release. If the
+# repository has an NPM_TOKEN secret, the same version is also published to npm.
 name: Release
 
 on:
-  push:
-    tags: ['v*']
+  release:
+    types: [published]
 
 permissions:
   contents: write
@@ -15,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      TAG: ${{ github.event.release.tag_name }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -24,20 +26,12 @@ jobs:
       - run: npm ci
       - run: npm test
       - name: Tag must match package.json
-        run: test "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME"
+        run: test "v$(node -p "require('./package.json').version")" = "$TAG"
       - run: npm pack
-      - name: Release notes from CHANGELOG.md
-        run: |
-          node -e "
-            const fs = require('fs')
-            const v = require('./package.json').version
-            const part = fs.readFileSync('CHANGELOG.md', 'utf8').split(/^## /m).find((s) => s.startsWith(v + '\n'))
-            fs.writeFileSync('notes.md', part ? part.slice(v.length).trim() : 'See CHANGELOG.md')
-          "
-      - name: GitHub Release
+      - name: Attach the tarball to the release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" dsh-gov-boot-*.tgz --title "$GITHUB_REF_NAME" --notes-file notes.md
+        run: gh release upload "$TAG" dsh-gov-boot-*.tgz --clobber
       - name: Publish to npm
         if: env.NPM_TOKEN != ''
         env:
