@@ -2,6 +2,8 @@
 
 给 DeepSeek Harness 的**政务风开机动画**：宣纸底朱红大字的长城片头 → 科技蓝统一身份认证（账号 / 扫码 / CA 证书三种登录方式）→ 选择要进入的工作台，再淡入 DSH。设置里可以切换档位和配色。
 
+**下载安装包**：[dsh-gov-boot-0.4.0.tgz](https://github.com/okiexia-ui/dsh-gov-boot/raw/main/dist/dsh-gov-boot-0.4.0.tgz)（点了直接下载，装法见下面「安装」）
+
 ![开机片头](preview/stills/splash.jpg)
 
 ![统一身份认证](preview/stills/signin.jpg)
