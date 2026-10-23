@@ -3,6 +3,8 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
+import { build } from '../scripts/build.mjs'
+
 const host = await import('../lib/index.js')
 const client = readFileSync(new URL('../lib/client.js', import.meta.url), 'utf8')
 const index = readFileSync(new URL('../lib/index.js', import.meta.url), 'utf8')
@@ -39,7 +41,7 @@ test('plugin name matches between the two halves', () => {
 })
 
 test('shared keys are identical in both halves', () => {
-  for (const key of ['MODE_KEY', 'FIRST_FRAME_GLOBAL']) {
+  for (const key of ['MODE_KEY', 'FIRST_FRAME_GLOBAL', 'VERSION_GLOBAL']) {
     const pattern = new RegExp(`const ${key} = '([^']+)'`)
     assert.equal(index.match(pattern)?.[1], client.match(pattern)?.[1], key)
   }
@@ -55,4 +57,13 @@ test('client z-index sits one above the host cover', () => {
   const cover = Number(index.match(/FIRST_FRAME_Z = (\d+)/)?.[1])
   const overlay = Number(client.match(/const Z = (\d+)/)?.[1])
   assert.equal(overlay, cover + 1)
+})
+
+test('lib/client.js is up to date with src/ (run npm run build)', () => {
+  assert.equal(client, build())
+})
+
+test('the version is written only in package.json', () => {
+  assert.doesNotMatch(index, /VERSION = '\d/)
+  assert.doesNotMatch(client, /V0\.\d/)
 })

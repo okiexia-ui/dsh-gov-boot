@@ -1,6 +1,9 @@
 # Publish a release on GitHub (Releases → Draft a new release → tag vX.Y.Z →
-# Publish) and this builds the tarball and attaches it to that release. If the
-# repository has an NPM_TOKEN secret, the same version is also published to npm.
+# Publish) and this builds the tarball and attaches it to that release, once as
+# dsh-gov-boot-X.Y.Z.tgz and once as dsh-gov-boot.tgz, so
+# https://github.com/okiexia-ui/dsh-gov-boot/releases/latest/download/dsh-gov-boot.tgz
+# always serves the newest one. If the repository has an NPM_TOKEN secret, the
+# same version is also published to npm.
 name: Release
 
 on:
@@ -27,11 +30,12 @@ jobs:
       - run: npm test
       - name: Tag must match package.json
         run: test "v$(node -p "require('./package.json').version")" = "$TAG"
-      - run: npm pack
-      - name: Attach the tarball to the release
+      - name: Pack (versioned + version-free copy for releases/latest/download/)
+        run: npm pack && cp "dsh-gov-boot-${TAG#v}.tgz" dsh-gov-boot.tgz
+      - name: Attach the tarballs to the release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "$TAG" dsh-gov-boot-*.tgz --clobber
+        run: gh release upload "$TAG" "dsh-gov-boot-${TAG#v}.tgz" dsh-gov-boot.tgz --clobber
       - name: Publish to npm
         if: env.NPM_TOKEN != ''
         env:

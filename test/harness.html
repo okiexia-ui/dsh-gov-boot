@@ -10,6 +10,8 @@
   // ?platform=x  html[data-platform], as the desktop shell sets it
   var params = new URLSearchParams(location.search)
   if (params.get('platform')) document.documentElement.setAttribute('data-platform', params.get('platform'))
+  // ?version=x  what the host half would inject as window.__dshGovVersion
+  if (params.get('version')) window.__dshGovVersion = params.get('version')
   window.__ModuleLoader__ = {
     load: function (record) {
       var t0 = performance.now()

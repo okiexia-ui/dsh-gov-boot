@@ -1,0 +1,10 @@
+# Entry for https://github.com/awesome-dsh-plugin/awesome-dsh-plugin
+# Submit as data/plugins/okiexia-ui__dsh-gov-boot.yml (see their contributing.md).
+url: https://github.com/okiexia-ui/dsh-gov-boot
+name: okiexia-ui/dsh-gov-boot
+category: ui
+description:
+  en: 'Government-portal boot sequence: a rice-paper Great Wall splash, a sign-in screen and a workbench picker that opens a session with a starter prompt.'
+  zh: '政务风开机动画：宣纸长城片头、统一身份认证页，以及选中后新建会话并预填提示词的工作台选择页。'
+icon: https://raw.githubusercontent.com/okiexia-ui/dsh-gov-boot/main/docs/icon-180.png
+tarball: https://github.com/okiexia-ui/dsh-gov-boot/releases/latest/download/dsh-gov-boot.tgz

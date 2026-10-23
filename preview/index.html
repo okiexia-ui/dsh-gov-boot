@@ -35,8 +35,10 @@
   var seek = Number(params.get('seek') || 0)
 
   try {
-    localStorage.removeItem('dsh-gov-boot:mode')
-    if (params.get('mode')) localStorage.setItem('dsh-gov-boot:mode', params.get('mode'))
+    // The preview always plays what it is asked for; auto mode would drop to the
+    // splash after the first visit.
+    localStorage.setItem('dsh-gov-boot:mode', params.get('mode') || 'full')
+    localStorage.removeItem('dsh-gov-boot:seen')
     if (params.get('theme')) localStorage.setItem('dsh-gov-boot:theme', params.get('theme'))
   } catch (error) {}
 

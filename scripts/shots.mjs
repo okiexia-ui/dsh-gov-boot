@@ -22,10 +22,13 @@ const FRAMES = {
   night: 'seek=6400&theme=night',
 }
 
+const version = JSON.parse(readFileSync(root + 'package.json', 'utf8')).version
 const browser = await chromium.launch()
 const frames = {}
 for (const [name, query] of Object.entries(FRAMES)) {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+  // What the host half injects inside DSH, so the splash shows the real version.
+  await page.addInitScript((v) => { window.__dshGovVersion = v }, version)
   await page.goto(preview + '?' + query)
   await page.waitForTimeout(600)
   frames[name] = await page.screenshot({ type: 'png' })
@@ -70,4 +73,4 @@ await page.screenshot({ path: out + 'settings.png' })
 await page.close()
 
 await browser.close()
-console.log('stills written to ' + out + ': ' + JSON.parse(readFileSync(root + 'package.json', 'utf8')).version)
+console.log('stills written to ' + out + ' for ' + version)

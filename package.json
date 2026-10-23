@@ -1,6 +1,6 @@
 {
   "name": "dsh-gov-boot",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "政务风 DSH 开机动画：宣纸长城片头 → 科技蓝统一身份认证（账号 / 扫码 / CA 三种登录方式）→ 选择工作台；设置里可切换关闭 / 仅片头 / 完整和三套配色。",
   "type": "module",
   "main": "./lib/index.js",
@@ -14,6 +14,7 @@
     "lib",
     "preview",
     "cordis.patch.yml",
+    "screenshots.json",
     "README.md",
     "README.en.md",
     "CHANGELOG.md",
@@ -44,12 +45,15 @@
     "政务"
   ],
   "scripts": {
+    "build": "node scripts/build.mjs",
     "check": "node --check lib/client.js && node --check lib/index.js",
     "test": "npm run check && node --test test/host.test.mjs",
     "test:e2e": "node --test --test-concurrency=1 test/e2e.test.cjs",
-    "test:all": "npm test && npm run test:e2e",
+    "test:dsh": "node --test --test-concurrency=1 test/dsh.test.cjs",
+    "test:all": "npm test && npm run test:e2e && npm run test:dsh",
     "shots": "node scripts/shots.mjs",
-    "prepack": "npm run check"
+    "demo": "node scripts/demo.mjs",
+    "prepack": "npm run build && npm run check"
   },
   "peerDependencies": {
     "react": "^18.2.0"
