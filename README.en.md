@@ -10,7 +10,7 @@ A government-portal style boot sequence for [DeepSeek Harness](https://www.npmjs
 
 **Download**: [dsh-gov-boot.tgz](https://github.com/okiexia-ui/dsh-gov-boot/releases/latest/download/dsh-gov-boot.tgz) (always the newest; older versions under [Releases](https://github.com/okiexia-ui/dsh-gov-boot/releases)).
 
-![Demo](docs/demo.gif)
+![Demo](https://raw.githubusercontent.com/okiexia-ui/dsh-gov-boot/main/docs/demo.gif)
 
 ## What it does
 

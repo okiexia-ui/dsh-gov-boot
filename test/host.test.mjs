@@ -2,6 +2,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
 
 import { build } from '../scripts/build.mjs'
 
@@ -66,4 +67,19 @@ test('lib/client.js is up to date with src/ (run npm run build)', () => {
 test('the version is written only in package.json', () => {
   assert.doesNotMatch(index, /VERSION = '\d/)
   assert.doesNotMatch(client, /V0\.\d/)
+})
+
+test('package includes linked contributing docs and keeps the demo external', () => {
+  const output = execFileSync('npm', ['pack', '--dry-run', '--ignore-scripts', '--json'], {
+    cwd: new URL('../', import.meta.url),
+    encoding: 'utf8',
+  })
+  const files = new Set(JSON.parse(output)[0].files.map((file) => file.path))
+  assert.ok(files.has('CONTRIBUTING.md'))
+  assert.ok(!files.has('docs/demo.gif'))
+  for (const name of ['README.md', 'README.en.md']) {
+    assert.ok(files.has(name))
+    const readme = readFileSync(new URL(`../${name}`, import.meta.url), 'utf8')
+    assert.match(readme, /!\[[^\]]*\]\(https:\/\/raw\.githubusercontent\.com\/okiexia-ui\/dsh-gov-boot\/main\/docs\/demo\.gif\)/)
+  }
 })

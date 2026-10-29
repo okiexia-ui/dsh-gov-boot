@@ -10,7 +10,7 @@
 
 **下载**：[dsh-gov-boot.tgz](https://github.com/okiexia-ui/dsh-gov-boot/releases/latest/download/dsh-gov-boot.tgz)（始终是最新版，历史版本见 [Releases](https://github.com/okiexia-ui/dsh-gov-boot/releases)），装法见下面「安装」。
 
-![演示](docs/demo.gif)
+![演示](https://raw.githubusercontent.com/okiexia-ui/dsh-gov-boot/main/docs/demo.gif)
 
 ## 流程
 
